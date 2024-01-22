@@ -7,6 +7,7 @@ import categoryRoutes from './routes/categoryRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import cors from 'cors'
 import path from 'path'
+import compression from 'compression';
 
 //configure env
 dotenv.config();
@@ -16,6 +17,19 @@ connectDB();
 
 const app = express();
 
+
+app.use(
+    compression({
+        level:6,
+        threshold:10 * 1000,
+        filter: (req, res) => {
+            if(req.headers['x-no-compression']){
+                return false
+            }
+            return compression.filter(req, res)
+        },
+    })
+)
 //middleware
 app.use(cors())
 app.use(express.json())
